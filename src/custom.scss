@@ -1,0 +1,29 @@
+// Override default variables before the import
+//NavBar
+$theme-colors: (
+  "dark": #242629,
+);
+
+.card-headline {
+  color: #fffffe;
+}
+$primary: #16161a;
+$secondary: #94a1b2;
+$info: #7f5af0;
+
+.text-responsive {
+  font-size: calc(80% + 1vw + 1vh);
+}
+.modal {
+  margin-right: 0px !important;
+}
+body.modal-open > :not(.modal) {
+  margin-top: -60px;
+  -webkit-filter: blur(0.5px);
+  -moz-filter: blur(0.5px);
+  -o-filter: blur(0.5px);
+  -ms-filter: blur(0.5px);
+  filter: blur(0.5px);
+}
+// Import Bootstrap and its default variables
+@import "../node_modules/bootstrap/scss/bootstrap";

@@ -1,0 +1,39 @@
+.outerContainer {
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+  height: 100vh;  
+  background-size: cover;
+  background-attachment: fixed;
+  background-image: url("/src/photos/Endless-Constellation2.svg");
+}
+
+.innerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0px 10px 0px 10px !important;
+  border-radius: 8px;
+  height: 82%;
+  width: 80%;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .outerContainer {
+    display: block;
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  .innerContainer {
+    width: 100%;
+    padding: 15px 10px 0px 10px !important;
+    height: 83%;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 1200px) {
+  .innerContainer {
+    width: 80%;
+  }
+}

@@ -1,24 +1,32 @@
 // Override default variables before the import
 //NavBar
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+* {
+  font-family: "IBM Plex Sans", sans-serif !important;
+}
 $theme-colors: (
-  "dark": #242629,
+  "dark": #1b2c30,
 );
 
-.card-headline {
-  color: #fffffe;
+.description {
+  white-space: pre-line;
 }
-$primary: #16161a;
-$secondary: #94a1b2;
-$info: #7f5af0;
+
+.card-headline {
+  color: #f1f1f1;
+}
+$primary: #0a2126;
+$secondary: #c4c2c2;
+$info: #7e59ef;
 
 .text-responsive {
-  font-size: calc(80% + 1vw + 1vh);
+  font-size: calc(80% + 1vw + 1hv);
 }
 .modal {
   margin-right: 0px !important;
 }
 body.modal-open > :not(.modal) {
-  margin-top: -60px;
+  overflow-y: hidden;
   -webkit-filter: blur(0.5px);
   -moz-filter: blur(0.5px);
   -o-filter: blur(0.5px);

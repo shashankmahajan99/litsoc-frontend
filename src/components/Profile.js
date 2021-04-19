@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Container, Col, Row } from "react-bootstrap";
 import Posts from "./Posts";
 import Image from "react-bootstrap/Image";
-import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,42 +9,26 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Create_post from "./Create_post";
-import profilepic from "../photos/profilepic.jpg";
+import CreatePost from "./CreatePost";
 import Followers from "./Followers";
 import Following from "./Following";
-import InfiniteScroll from "react-infinite-scroll-component";
+import UserContext from "../context/UserContext";
+import photo from "../photos/guest.png";
+import Settings from "./Settings";
+import UserComments from "./UserComments";
 
 const Profile = () => {
+  const { userData } = useContext(UserContext);
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-  const [state, setState] = React.useState({
-    items: Array.from({ length: 2 }),
-    hasMore: true,
-  });
+  const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   //For Horizontal Tabs: Posts and Comments
-  const [value2, setValue2] = React.useState(0);
+  const [value2, setValue2] = useState(0);
 
   const handleChange2 = (event, newValue) => {
     setValue2(newValue);
-  };
-
-  const fetchMoreData = () => {
-    // a fake async api call like which sends
-    // 20 more records in 1.5 secs
-    if (state.items.length >= 5) {
-      setState({ ...state, hasMore: false });
-      return;
-    }
-    setTimeout(() => {
-      setState({
-        ...state,
-        items: state.items.concat(Array.from({ length: 1 })),
-      });
-    }, 1500);
   };
   return (
     <Container fluid>
@@ -54,12 +37,21 @@ const Profile = () => {
           <div className="w-100 text-center">
             <Image
               className="my-3"
-              src={profilepic}
+              src={
+                userData.user && userData.user.imgId !== "false"
+                  ? `https://firebasestorage.googleapis.com/v0/b/litsoc-a8678.appspot.com/o/${userData.user.username}?alt=media`
+                  : photo
+              }
               roundedCircle
               height="160"
-              width="180"
+              width="160"
+              style={{ aspectRatio: "16/9" }}
             />
-            <h4 className="text-secondary">Jane Doe</h4>
+            <h4 className="text-secondary">
+              {userData.user
+                ? userData.user.firstName + " " + userData.user.lastName
+                : "Loading..."}
+            </h4>
           </div>
           <Dropdown.Divider />
           <div className={classes.root}>
@@ -91,12 +83,7 @@ const Profile = () => {
                 label="Following"
                 {...a11yProps(3)}
               />
-              <Tab
-                className="mb-3 bg-primary"
-                label="Message"
-                {...a11yProps(4)}
-              />
-              <Tab className="bg-primary" label="Settings" {...a11yProps(5)} />
+              <Tab className="bg-primary" label="Settings" {...a11yProps(4)} />
             </Tabs>
           </div>
         </Col>
@@ -125,17 +112,19 @@ const Profile = () => {
                     </Tabs>
                   </div>
                   <TabPanel value={value2} index={0}>
-                    <Posts />
+                    <Posts myProfile={true} />
                   </TabPanel>
                   <TabPanel value={value2} index={1}>
-                    Item Three
+                    <UserComments
+                      username={userData.user ? userData.user.username : null}
+                    />
                   </TabPanel>
                 </Row>
               </Col>
             </Container>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <Create_post />
+            <CreatePost />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <Followers />
@@ -144,10 +133,7 @@ const Profile = () => {
             <Following />
           </TabPanel>
           <TabPanel value={value} index={4}>
-            Item Five
-          </TabPanel>
-          <TabPanel value={value} index={5}>
-            Item Six
+            <Settings />
           </TabPanel>
         </Col>
       </Row>

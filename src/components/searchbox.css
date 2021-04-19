@@ -1,0 +1,5 @@
+input#search_input.searchBox::placeholder{
+    color: white;
+}
+
+

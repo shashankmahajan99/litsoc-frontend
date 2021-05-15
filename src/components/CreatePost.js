@@ -277,6 +277,6 @@ const styles = {
   },
   chips: {
     // To change css chips(Selected options)
-    background: "#7f5af0",
+    background: "#0fa697",
   },
 };

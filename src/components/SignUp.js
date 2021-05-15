@@ -82,7 +82,7 @@ function ModalCentered(props) {
       <Modal.Body className="bg-dark text-light">
         <Form onSubmit={handleSubmit}>
           <Row>
-            <Col xs={6}>
+            <Col xs={12} md={6}>
               <Form.Label>First Name</Form.Label>
               <Form.Control
                 required
@@ -91,7 +91,7 @@ function ModalCentered(props) {
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </Col>
-            <Col xs={6}>
+            <Col xs={12} md={6}>
               <Form.Label>Last Name</Form.Label>
               <Form.Control
                 required
@@ -102,7 +102,7 @@ function ModalCentered(props) {
             </Col>
           </Row>
           <Row className="mt-3">
-            <Col xs={6}>
+            <Col xs={12} md={6}>
               <Form.Group controlId="formGroupEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
@@ -117,7 +117,7 @@ function ModalCentered(props) {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col xs={6}>
+            <Col xs={12} md={6}>
               <Form.Group controlId="validationCustomUsername">
                 <Form.Label htmlFor="inlineFormInputGroup">Username</Form.Label>
                 <InputGroup className="mb-2">
@@ -144,7 +144,7 @@ function ModalCentered(props) {
             </Col>
           </Row>
           <Row>
-            <Col xs={4}>
+            <Col xs={12} md={4}>
               <Form.Group controlId="formGroupPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -156,7 +156,7 @@ function ModalCentered(props) {
                 />
               </Form.Group>
             </Col>
-            <Col xs={4}>
+            <Col xs={12} md={4}>
               <Form.Group controlId="formGroupPassword">
                 <Form.Label>Confirm Password</Form.Label>
                 <Form.Control

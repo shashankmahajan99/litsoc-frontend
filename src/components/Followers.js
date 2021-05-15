@@ -7,16 +7,17 @@ import Button from "react-bootstrap/Button";
 import React, { useState, useEffect, useContext } from "react";
 import axios from "../axios";
 import UserContext from ".././context/UserContext";
+import { Divider } from "@material-ui/core";
 
 const Followers = ({ otherUser }) => {
   const [user, setUser] = useState({});
   const { userData } = useContext(UserContext);
   useEffect(() => {
     const fetchUser = async () => {
-      const id = userData.user.id;
-      const res = await axios.get(
-        `https://app-litsoc.herokuapp.com/user/${id}`
-      );
+      const id = userData.user ? userData.user.id : undefined;
+      const res = id
+        ? await axios.get(`https://app-litsoc.herokuapp.com/user/${id}`)
+        : null;
       setUser(otherUser ? otherUser : res.data);
     };
     fetchUser();
@@ -27,7 +28,7 @@ const Followers = ({ otherUser }) => {
         {user.followers &&
           user.followers.map((username) =>
             // If followers array contain any people following the user then send `initialFollow` as true or else false
-            otherUser ? (
+            otherUser && userData.user ? (
               userData.user.following.includes(username) ? (
                 <Follower
                   key={user.id}
@@ -91,7 +92,7 @@ const Follower = ({ username, initialFollow }) => {
     const token = localStorage.getItem("auth-token");
     await axios
       .patch(
-        `http://app-litsoc.herokuapp.com/user/addFollower/${username}`,
+        `https://app-litsoc.herokuapp.com/user/addFollower/${username}`,
         null,
         {
           headers: {
@@ -101,14 +102,16 @@ const Follower = ({ username, initialFollow }) => {
       )
       .then(
         (response) => {
-          userData.user.following.push(username);
-          setUserData({
-            ...userData,
-            user: {
-              ...userData.user,
-              following: userData.user.following,
-            },
-          });
+          if (userData.user) {
+            userData.user.following.push(username);
+            setUserData({
+              ...userData,
+              user: {
+                ...userData.user,
+                following: userData.user.following,
+              },
+            });
+          }
           console.log(response);
         },
         (error) => {
@@ -120,7 +123,7 @@ const Follower = ({ username, initialFollow }) => {
     const token = localStorage.getItem("auth-token");
     await axios
       .patch(
-        `http://app-litsoc.herokuapp.com/user/deleteFollower/${username}`,
+        `https://app-litsoc.herokuapp.com/user/deleteFollower/${username}`,
         null,
         {
           headers: {
@@ -130,15 +133,17 @@ const Follower = ({ username, initialFollow }) => {
       )
       .then(
         (response) => {
-          setUserData({
-            ...userData,
-            user: {
-              ...userData.user,
-              following: userData.user.following.filter(
-                (item) => item !== username
-              ),
-            },
-          });
+          if (userData.user) {
+            setUserData({
+              ...userData,
+              user: {
+                ...userData.user,
+                following: userData.user.following.filter(
+                  (item) => item !== username
+                ),
+              },
+            });
+          }
           console.log(response);
         },
         (error) => {
@@ -158,9 +163,9 @@ const Follower = ({ username, initialFollow }) => {
   return (
     <>
       <Row>
-        <Col sm={1}>
+        <Col xs={4} sm={1}>
           <Image
-            className="bg-transparent mb-3"
+            className="bg-transparent mb-sm-3"
             src={
               secondUser.imgId !== "false"
                 ? `https://firebasestorage.googleapis.com/v0/b/litsoc-a8678.appspot.com/o/${secondUser.username}?alt=media`
@@ -168,11 +173,11 @@ const Follower = ({ username, initialFollow }) => {
             }
             roundedCircle
             alt="user pic"
-            height="70"
-            width="75"
+            height="90"
+            width="90"
           />
         </Col>
-        <Col sm={8} className="mt-4 ml-2">
+        <Col xs={4} sm={7} className="mt-sm-4 ml-sm-2">
           <NavLink
             to={`/secondUser/${secondUser.id}`}
             className="text-decoration-none text-light"
@@ -182,28 +187,48 @@ const Follower = ({ username, initialFollow }) => {
             </h5>
           </NavLink>
         </Col>
-        <div className="h-25 ml-1 my-auto">
-          <NavLink
-            onClick={(event) => (userData.user ? null : event.preventDefault())}
-            to={{
-              pathname: "/chat",
-              search: `?name=${userData.user.username}&room=${
-                hashGenerator(userData.user.username) +
-                hashGenerator(secondUser.username)
-              }&otherUser=${secondUser.username}`,
-            }}
-          >
-            <Button variant="info" type="submit">
-              Message
-            </Button>
-          </NavLink>
-        </div>
-        <div className="h-25 ml-3 my-auto">
-          <Button variant="info" type="submit" onClick={handleFollowButton}>
-            {isFollowed ? "following" : "follow"}
-          </Button>
-        </div>
+        <Col xs={4} sm={3}>
+          <div className="h-25 my-auto">
+            {userData.user ? (
+              secondUser.username !== userData.user.username ? (
+                <Button
+                  variant="info"
+                  type="submit"
+                  className="my-2 my-sm-0"
+                  onClick={handleFollowButton}
+                >
+                  {isFollowed ? "following" : "follow"}
+                </Button>
+              ) : null
+            ) : null}
+            <NavLink
+              onClick={(event) =>
+                userData.user ? null : event.preventDefault()
+              }
+              to={{
+                pathname: "/chat",
+                search: `?name=${
+                  userData.user ? userData.user.username : null
+                }&room=${
+                  hashGenerator(userData.user ? userData.user.username : null) +
+                  hashGenerator(secondUser.username)
+                }&otherUser=${secondUser.username}`,
+              }}
+            >
+              {isFollowed ? (
+                <Button
+                  variant="info"
+                  type="submit"
+                  className="ml-sm-2 mb-2 mb-sm-0"
+                >
+                  Message
+                </Button>
+              ) : null}
+            </NavLink>
+          </div>
+        </Col>
       </Row>
+      <Divider className="bg-light mb-3" />
     </>
   );
 };

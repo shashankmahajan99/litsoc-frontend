@@ -100,14 +100,14 @@ const SearchBox = ({ setSearchKeyword, setCategory, setGenre }) => {
       categories: categories === undefined ? "" : categories[0],
     });
   };
-  console.log(search);
+
   return (
     <Container>
-      <Col md="auto">
-        <Row className="justify-content-md-center mx-5 my-5" fluid>
+      <Col md={12}>
+        <Row className="my-5 ml-auto" fluid={1}>
           <Form inline onSubmit={handleSearch}>
-            <Col>
-              <Row>
+            <Row className="my-1" fluid={1}>
+              <Col xs={11} md={4}>
                 <FormControl
                   type="text"
                   placeholder="Search"
@@ -115,43 +115,43 @@ const SearchBox = ({ setSearchKeyword, setCategory, setGenre }) => {
                     setSearch({ ...search, keyword: e.target.value })
                   }
                 />
-                <Button variant="info" className="mx-1" type="submit">
+              </Col>
+              <Col xs={4} md={2} className="mt-2 mt-sm-0 mr-md-2">
+                <Multiselect
+                  className="multiselect"
+                  placeholder="Category"
+                  hidePlaceholder={true}
+                  options={categoryList.categoryArray}
+                  isObject={false}
+                  style={styles}
+                  ref={categoryRef}
+                  value={search.categories}
+                  onSelect={onChangeCategories}
+                  onRemove={onChangeCategories}
+                  selectionLimit="1"
+                />
+              </Col>
+              <Col xs={4} md={2} className="mt-2 mt-sm-0 mx-md-2">
+                <Multiselect
+                  className="multiselect"
+                  placeholder="Genre"
+                  hidePlaceholder={true}
+                  options={genreList.genresArray}
+                  isObject={false}
+                  style={styles}
+                  ref={genreRef}
+                  value={search.genres}
+                  onSelect={onChangeGenres}
+                  onRemove={onChangeGenres}
+                  selectionLimit="1"
+                />
+              </Col>
+              <Col xs={4} md={2} className="mt-2 mt-sm-0 mx-md-2">
+                <Button variant="info" type="submit">
                   Search
                 </Button>
-              </Row>
-              <Row className="my-1">
-                <Col sm={6} className="px-0">
-                  <Multiselect
-                    className="multiselect"
-                    placeholder="Category"
-                    hidePlaceholder={true}
-                    options={categoryList.categoryArray}
-                    isObject={false}
-                    style={styles}
-                    ref={categoryRef}
-                    value={search.categories}
-                    onSelect={onChangeCategories}
-                    onRemove={onChangeCategories}
-                    selectionLimit="1"
-                  />
-                </Col>
-                <Col sm={6} className="pl-0">
-                  <Multiselect
-                    className="multiselect"
-                    placeholder="Genre"
-                    hidePlaceholder={true}
-                    options={genreList.genresArray}
-                    isObject={false}
-                    style={styles}
-                    ref={genreRef}
-                    value={search.genres}
-                    onSelect={onChangeGenres}
-                    onRemove={onChangeGenres}
-                    selectionLimit="1"
-                  />
-                </Col>
-              </Row>
-            </Col>
+              </Col>
+            </Row>
           </Form>
         </Row>
       </Col>
@@ -165,15 +165,15 @@ const styles = {
   },
   searchBox: {
     // To change search box element look
-    background: "#7e59ef",
+    background: "#0fa697",
     border: "none",
     color: "#fff",
-    width: "8.55rem",
-    height: "2rem",
+    width: "7rem",
+    height: "2.35rem",
   },
   chips: {
     // To change css chips(Selected options)
-    background: "#7f5af0",
+    background: "#0fa697",
   },
 };
 export default SearchBox;

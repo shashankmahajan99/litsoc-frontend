@@ -12,7 +12,8 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwipeDrawer from "../SwipeDrawer";
-import bg from "../photos/Endless-Constellation2.svg";
+// import bg from "../photos/Endless-Constellation2.svg";
+import bg from "../photos/video.mp4";
 import Followers from "./Followers";
 import Following from "./Following";
 import axios from "../axios";
@@ -21,7 +22,6 @@ import { NavLink } from "react-router-dom";
 import UserComments from "./UserComments";
 
 const SecondUser = ({ match }) => {
-  const classes = useStyles();
   const [value, setValue] = useState(0);
   const [secondUserData, setSecondUserData] = useState({});
   // `Follow` Button State
@@ -41,6 +41,29 @@ const SecondUser = ({ match }) => {
     };
     fetchUser();
   }, [match.params.id, userData.user]);
+  const [width, setWidth] = useState(window.innerWidth);
+  const updateDimensions = () => {
+    setWidth(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 0,
+      height: width > 768 ? 450 : "auto",
+    },
+    root2: {
+      flexGrow: 1,
+    },
+    tabs: {
+      alignItems: "center",
+      borderRight: `1px solid ${theme.palette.divider}`,
+      color: "white",
+    },
+  }));
+  const classes = useStyles();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -132,25 +155,31 @@ const SecondUser = ({ match }) => {
   };
   if (secondUserData)
     return (
-      <div
-        style={{
-          backgroundAttachment: "fixed",
-          backgroundImage: `url(${bg})`,
-          padding: "24px",
-        }}
-      >
-        <SwipeDrawer isFalse={1} />
-        <Container
-          fluid
+      <div style={{ backgroundColor: "#16161A" }}>
+        {/* <video
+          autoPlay
+          muted
+          loop
           style={{
-            marginTop: "-48px",
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: "50%",
+            left: "50%",
+            objectFit: "cover",
+            transform: "translate(-50%,-50%)",
+            zIndex: "-1",
           }}
         >
+          <source src={bg} type="video/mp4" />
+        </video> */}
+        <SwipeDrawer isFalse={1} />
+        <Container fluid={1} className="pt-4 mt-sm-0 pt-sm-0">
           <Row>
             <Col className="bg-dark ml-auto mt-3" sm={2}>
               <div className="w-100 text-center">
                 <Image
-                  className="my-3"
+                  className="my-3 profilePic"
                   src={
                     secondUserData.imgId !== "false"
                       ? `https://firebasestorage.googleapis.com/v0/b/litsoc-a8678.appspot.com/o/${secondUserData.username}?alt=media`
@@ -158,7 +187,7 @@ const SecondUser = ({ match }) => {
                   }
                   roundedCircle
                   height="160"
-                  width="180"
+                  width="160"
                 />
                 <h4 className="text-secondary">
                   {secondUserData.firstName + " " + secondUserData.lastName}
@@ -168,62 +197,61 @@ const SecondUser = ({ match }) => {
               {userData.user ? (
                 secondUserData.username !== userData.user.username ? (
                   <Row className="mt-4 mb-5">
-                    <Col sm={5}>
-                      <Button
-                        variant="outline-info"
-                        onClick={handleFollowButton}
-                      >
-                        {isFollowed ? "Following" : "Follow"}
-                      </Button>
+                    <Col xs={isFollowed ? 4 : 12} sm={isFollowed ? 4 : 12}>
+                      <div className="w-100 text-center">
+                        <Button
+                          variant="outline-info"
+                          onClick={handleFollowButton}
+                          className={isFollowed ? "" : "ml-auto"}
+                        >
+                          {isFollowed ? "Following" : "Follow"}
+                        </Button>
+                      </div>
                     </Col>
-                    <Col sm={5} className="ml-2">
-                      <NavLink
-                        onClick={(event) =>
-                          userData.user ? null : event.preventDefault()
-                        }
-                        to={{
-                          pathname: "/chat",
-                          search: `?name=${userData.user.username}&room=${
-                            hashGenerator(userData.user.username) +
-                            hashGenerator(secondUserData.username)
-                          }&otherUser=${secondUserData.username}`,
-                        }}
-                      >
-                        <Button variant="outline-info">Message</Button>
-                      </NavLink>
+                    <Col xs={4} sm={5} className="ml-auto">
+                      {isFollowed ? (
+                        <NavLink
+                          onClick={(event) =>
+                            userData.user ? null : event.preventDefault()
+                          }
+                          to={{
+                            pathname: "/chat",
+                            search: `?name=${userData.user.username}&room=${
+                              hashGenerator(userData.user.username) +
+                              hashGenerator(secondUserData.username)
+                            }&otherUser=${secondUserData.username}`,
+                          }}
+                        >
+                          <Button variant="outline-info">Message</Button>
+                        </NavLink>
+                      ) : null}
                     </Col>
+                    <Col sm={1} />
                   </Row>
                 ) : null
-              ) : (
-                <Row className="mt-4 mb-5">
-                  <Col sm={6}>
-                    <Button variant="outline-info" className="ml-3">
-                      "Follow"
-                    </Button>
-                  </Col>
-                </Row>
-              )}
+              ) : null}
               <div className={classes.root}>
                 <Tabs
-                  orientation="vertical"
+                  orientation={width > 768 ? "vertical" : "horizontal"}
                   variant="scrollable"
+                  scrollButtons={width < 768 ? "on" : "off"}
                   value={value}
                   onChange={handleChange}
                   aria-label="Vertical tabs example"
                   className={classes.tabs}
                 >
                   <Tab
-                    className="mt-3 mb-3 bg-primary"
+                    className="py-4 py-sm-0 mt-sm-3 mb-sm-3 bg-primary"
                     label="Timeline"
                     {...a11yProps(0)}
                   />
                   <Tab
-                    className="mb-3 bg-primary"
+                    className="py-4 py-sm-0 mb-sm-3 bg-primary"
                     label="Followers"
                     {...a11yProps(1)}
                   />
                   <Tab
-                    className="mb-3 bg-primary"
+                    className="py-4 py-sm-0 mb-sm-3 bg-primary"
                     label="Following"
                     {...a11yProps(2)}
                   />
@@ -232,7 +260,7 @@ const SecondUser = ({ match }) => {
             </Col>
             <Col className="bg-primary mt-3" sm={10}>
               <TabPanel value={value} index={0}>
-                <Container fluid>
+                <Container fluid={1}>
                   <Col>
                     <Row>
                       <div className={classes.root2}>
@@ -298,11 +326,7 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={0}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -318,20 +342,5 @@ function a11yProps(index) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 0,
-    height: 450,
-  },
-  root2: {
-    flexGrow: 1,
-  },
-  tabs: {
-    alignItems: "center",
-    borderRight: `1px solid ${theme.palette.divider}`,
-    color: "white",
-  },
-}));
 
 export default SecondUser;

@@ -6,7 +6,7 @@ class PopularGenres extends React.Component {
   render() {
     return (
       <Card
-        style={{ width: "14rem" }}
+        style={{ width: "13.5rem", paddingLeft: "0" }}
         className="mt-3"
         bg="primary"
         text="secondary"

@@ -1,21 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "../axios";
 import UserContext from ".././context/UserContext";
-const Notification = ({
-  room,
-  user,
-  setNotification,
-  notification,
-  setBadge,
-  badge,
-}) => {
+const Notification = ({ room, user, setNotification, setBadge }) => {
   const { userData } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
-  const [msgs, setMsgs] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("auth-token");
       let req;
+      const token = userData.token;
       if (room) {
         req = await axios.get(
           `https://chat-litsoc.herokuapp.com/chat/messages/${room}`,
@@ -35,9 +27,9 @@ const Notification = ({
       }
     };
     fetchData();
-  }, [room, userData.user]);
+  }, [room, userData.user, userData.token]);
+
   useEffect(() => {
-    console.log(messages);
     if (messages.length > 0) {
       setNotification((prevState) => [
         ...prevState,

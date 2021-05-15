@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import UserContext from ".././context/UserContext";
 import Notification from "./Notification";
 import { NavLink } from "react-router-dom";
@@ -21,6 +21,8 @@ const Notifications = () => {
   const [value, setValue] = useState([1, 3]);
   const [badge, setBadge] = useState(0);
   const [notification, setNotification] = useState([]);
+  const notificationToastRef = useRef();
+
   useEffect(() => {
     if (userData.user) {
       setRecentChats(
@@ -30,7 +32,20 @@ const Notifications = () => {
       );
     }
   }, [userData.user]);
-
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        notificationToastRef.current &&
+        !notificationToastRef.current.contains(event.target)
+      ) {
+        setShow(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [notificationToastRef]);
   const hashGenerator = (user) => {
     let hash = 0,
       i,
@@ -60,8 +75,9 @@ const Notifications = () => {
               <ToggleButton value={false}>
                 <FontAwesomeIcon icon={faBell} />
                 <Badge variant="danger">
-                  {recentChats.map((user) => (
+                  {recentChats.map((user, index) => (
                     <Notification
+                      key={index}
                       room={
                         hashGenerator(userData.user.username) +
                         hashGenerator(user)
@@ -89,6 +105,7 @@ const Notifications = () => {
               }}
               onClose={() => setShow(false)}
               show={show}
+              ref={notificationToastRef}
             >
               <Toast.Header className="text-info">
                 <strong className="ml-auto">Notifications</strong>
@@ -97,7 +114,6 @@ const Notifications = () => {
                 {notification.length > 0 ? (
                   notification.map((item, index) => (
                     <div>
-                      ( {item.number} ) new messages from{" "}
                       <NavLink
                         key={index}
                         to={{
@@ -108,7 +124,7 @@ const Notifications = () => {
                           }&otherUser=${item.user}`,
                         }}
                       >
-                        {item.user}
+                        ( {item.number} ) new messages from {item.user}
                       </NavLink>
                     </div>
                   ))

@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import "./Join.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import bg from "../../photos/video.mp4";
 
 const JoinChat = () => {
   const [name, setName] = useState("");
@@ -34,6 +35,23 @@ const JoinChat = () => {
   }, [userData.user]);
   return (
     <>
+      {/* <video
+        autoPlay
+        muted
+        loop
+        style={{
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          top: "50%",
+          left: "50%",
+          objectFit: "cover",
+          transform: "translate(-50%,-50%)",
+          zIndex: "-1",
+        }}
+      >
+        <source src={bg} type="video/mp4" />
+      </video> */}
       <SwipeDrawer isFalse={1} />
       <div className="joinOuterContainer">
         <div className="joinInnerContainer">
@@ -52,7 +70,7 @@ const JoinChat = () => {
                   }&otherUser=${user}`,
                 }}
               >
-                <button className={"button mt-20"} type="submit">
+                <button className="button mt-2" type="submit">
                   {user}
                 </button>
               </NavLink>

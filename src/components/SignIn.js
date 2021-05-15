@@ -41,7 +41,7 @@ function ModalCentered(props) {
   return (
     <Modal
       {...props}
-      size="lg"
+      size="md"
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -51,7 +51,7 @@ function ModalCentered(props) {
       <Modal.Body className="bg-dark text-light">
         <Form onSubmit={handleSubmit}>
           <Row>
-            <Col xs={6}>
+            <Col xs={12}>
               <Form.Group id="loginId">
                 <Form.Label htmlFor="inlineFormInputGroup">Username</Form.Label>
                 <InputGroup className="mb-2">
@@ -73,7 +73,7 @@ function ModalCentered(props) {
                 </InputGroup>
               </Form.Group>
             </Col>
-            <Col xs={4}>
+            <Col xs={12}>
               <Form.Group controlId="formGroupPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control

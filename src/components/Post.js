@@ -7,7 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import MyAudioPlayer from "./AudioPlayer/MyAudioPlayer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCommentAlt,
+  faComments,
   faThumbsUp,
   faThumbsDown,
   faTrashAlt,
@@ -68,23 +68,61 @@ const Post = ({ post, myProfile }) => {
     firebaseStorage.storage().ref().child(post.fileName).delete();
   };
   return (
-    <Container className="my-3 py-md-2 rounded bg-dark shadow-lg" fluid>
+    <Container className="my-3 py-md-2 rounded bg-dark shadow-lg" fluid={1}>
       <Row>
-        <Col sm={7} md={8} lg={9} xl={10}>
+        <Col xs={2} sm={1} className="px-3">
+          <div className="row justify-content-center">
+            <Link
+              to={`/secondUser/${post.userid}`}
+              className="text-decoration-none"
+            >
+              <Image
+                src={checkImage(post.userImage, post.username)}
+                roundedCircle
+                height="60"
+                className="mx-sm-auto my-2 postProfilePic"
+                width="60"
+              />
+            </Link>
+          </div>
+        </Col>
+        <Col xs={10} sm={11} className="border-left">
+          <div className="row">
+            <Link
+              to={`/secondUser/${post.userid}`}
+              className="text-decoration-none"
+            >
+              <h6 className="font-weight-bold text-light ml-3 my-4 my-sm-0">
+                {post.name} <span className="text-muted">@{post.username}</span>
+              </h6>
+            </Link>
+            {myProfile ? (
+              <Button
+                onClick={handleDelete}
+                className="mt-2 mt-sm-0 ml-auto mr-2"
+              >
+                <FontAwesomeIcon icon={faTrashAlt} />
+              </Button>
+            ) : null}
+          </div>
           <Link to={`/viewpost/${post._id}`} className="text-decoration-none">
-            <h3 className="font-weight-bold card-headline">{post.title}</h3>
+            <h4 className="font-weight-bold card-headline font-xs-130">
+              {post.title}
+            </h4>
           </Link>
           <h6 className="text-info card-paragraph">
             {post.category[0]} {post.category[1] ? "| " + post.category[1] : ""}
           </h6>
-          <h5 className="font-weight-normal font-smaller text-secondary">
-            Description - {post.description.slice(0, 400)}...
-            <strong>
-              <Link to={`/viewpost/${post._id}`} className="text-light">
-                Read More
-              </Link>
-            </strong>
-          </h5>
+          <div className="font-weight-normal text-secondary font-xs-100">
+            <p>
+              Description - {post.description.slice(0, 400)}...
+              <strong>
+                <Link to={`/viewpost/${post._id}`} className="text-light">
+                  Read More
+                </Link>
+              </strong>
+            </p>
+          </div>
           <h6>
             {post.genres.map((genre) => (
               <Badge pill className="mx-2 mt-1 p-1" variant="info">
@@ -93,39 +131,28 @@ const Post = ({ post, myProfile }) => {
             ))}
           </h6>
         </Col>
-        <Col sm={5} md={4} lg={3} xl={2}>
-          <div className="row">
-            {myProfile ? (
-              <Button onClick={handleDelete} className="ml-auto mr-2">
-                <FontAwesomeIcon icon={faTrashAlt} />
-              </Button>
-            ) : null}
-          </div>
-          <div className="row text-center">
-            <div className="col-5">
-              {
-                <Image
-                  src={checkImage(post.userImage, post.username)}
-                  roundedCircle
-                  height="120"
-                  className="mr-md-3 my-2"
-                  width="120"
-                />
-              }
-            </div>
-            <div className="col-7 my-auto col-md-12">
-              <Link
-                to={`/secondUser/${post.userid}`}
-                className="text-decoration-none"
-              >
-                <h5 className="font-weight-bold text-light">{post.name}</h5>
-              </Link>
-            </div>
-          </div>
-        </Col>
       </Row>
       <Row>
-        <Col className="mt-lg-3 mx-lg-2">
+        <Col xs={2} sm={1} className="px-3"></Col>
+        <Col xs={10} sm={7} className="border-left">
+          {/* <ReactAudioPlayer
+            src={`https://app-litsoc.herokuapp.com/files/${post.fileName}`}
+            controls
+            controlsList="nodownload"
+            volume={0.5}
+            className="ml-auto"
+            onListen={handleViews}
+            onCanPlay={() => {
+              setCanPlay(true);
+            }}
+          /> */}
+          <MyAudioPlayer filename={post.fileName} postId={post._id} />
+        </Col>
+        <Col
+          xs={{ span: 10, order: "last" }}
+          sm={{ span: 3 }}
+          className="mt-lg-3 mb-3 mb-sm-0"
+        >
           <ButtonGroup>
             <Button
               className="mr-1 text-light bg-primary border-dark text-decoration-none"
@@ -145,13 +172,6 @@ const Post = ({ post, myProfile }) => {
                   });
               }}
             >
-              {userLiked
-                ? postLiked
-                  ? post.likes.length - 1
-                  : post.likes.length
-                : postLiked
-                ? post.likes.length + 1
-                : post.likes.length}{" "}
               {userLiked ? (
                 postLiked ? (
                   <FontAwesomeIcon icon={faThumbsUp} />
@@ -162,7 +182,14 @@ const Post = ({ post, myProfile }) => {
                 <FontAwesomeIcon icon={faThumbsUp} className="text-danger" />
               ) : (
                 <FontAwesomeIcon icon={faThumbsUp} />
-              )}
+              )}{" "}
+              {userLiked
+                ? postLiked
+                  ? post.likes.length - 1
+                  : post.likes.length
+                : postLiked
+                ? post.likes.length + 1
+                : post.likes.length}
             </Button>
             <Button
               className="mr-1 text-light bg-primary border-dark text-decoration-none"
@@ -182,13 +209,6 @@ const Post = ({ post, myProfile }) => {
                   });
               }}
             >
-              {userDisliked
-                ? postDisliked
-                  ? post.dislikes.length - 1
-                  : post.dislikes.length
-                : postDisliked
-                ? post.dislikes.length + 1
-                : post.dislikes.length}{" "}
               {userDisliked ? (
                 postDisliked ? (
                   <FontAwesomeIcon icon={faThumbsDown} />
@@ -202,33 +222,30 @@ const Post = ({ post, myProfile }) => {
                 <FontAwesomeIcon icon={faThumbsDown} className="text-danger" />
               ) : (
                 <FontAwesomeIcon icon={faThumbsDown} />
-              )}
+              )}{" "}
+              {userDisliked
+                ? postDisliked
+                  ? post.dislikes.length - 1
+                  : post.dislikes.length
+                : postDisliked
+                ? post.dislikes.length + 1
+                : post.dislikes.length}
             </Button>
           </ButtonGroup>
           <Link to={`/viewpost/${post._id}`} className="text-decoration-none">
             <Button className="ml-1 bg-primary border-dark text-light text-decoration-none">
-              <FontAwesomeIcon icon={faCommentAlt} />{" "}
+              <FontAwesomeIcon icon={faComments} />{" "}
               {comments && commentReplies
                 ? comments.length + commentReplies.length
-                : "0"}{" "}
-              Comments
+                : "0"}
             </Button>
           </Link>
         </Col>
-        <Col>
-          {/* <ReactAudioPlayer
-            src={`https://app-litsoc.herokuapp.com/files/${post.fileName}`}
-            controls
-            controlsList="nodownload"
-            volume={0.5}
-            className="ml-auto"
-            onListen={handleViews}
-            onCanPlay={() => {
-              setCanPlay(true);
-            }}
-          /> */}
-          <MyAudioPlayer filename={post.fileName} postId={post._id} />
-        </Col>
+        <Col
+          xs={2}
+          sm={{ span: 1, order: "last" }}
+          className="px-3 px-sm-0"
+        ></Col>
       </Row>
     </Container>
   );

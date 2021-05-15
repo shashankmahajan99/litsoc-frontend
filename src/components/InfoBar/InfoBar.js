@@ -8,7 +8,11 @@ import "./InfoBar.css";
 const InfoBar = ({ otherUser }) => (
   <div className="infoBar">
     <div className="leftInnerContainer">
-      <img className="onlineIcon" src={onlineIcon} alt="online icon" />
+      <img
+        className="onlineIcon onlineIcon"
+        src={onlineIcon}
+        alt="online icon"
+      />
       <h3>{otherUser}</h3>
     </div>
     <div className="rightInnerContainer">

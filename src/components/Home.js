@@ -1,18 +1,40 @@
 import { useState } from "react";
-import bg from "../photos/Endless-Constellation2.svg";
+// import bg from "../photos/Endless-Constellation2.svg";
 import SwipeDrawer from "../SwipeDrawer";
+import bg from "../photos/video.mp4";
 const Home = () => {
   const [category, setCategory] = useState();
   return (
     <div
       className="App"
       style={{
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-        backgroundImage: `url(${bg})`,
+        // backgroundSize: "cover",
+        // backgroundAttachment: "fixed",
+        // backgroundImage: `url(${bg})`,
+        backgroundColor: "#16161A",
       }}
     >
-      <SwipeDrawer category={category} setCategory={setCategory} />
+      {/* <video
+        autoPlay
+        muted
+        loop
+        style={{
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          top: "50%",
+          left: "50%",
+          objectFit: "cover",
+          transform: "translate(-50%,-50%)",
+        }}
+      >
+        <source src={bg} type="video/mp4" />
+      </video> */}
+      <SwipeDrawer
+        category={category}
+        setCategory={setCategory}
+        showSearch={true}
+      />
     </div>
   );
 };

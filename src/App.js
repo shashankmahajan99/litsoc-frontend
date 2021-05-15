@@ -5,6 +5,7 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import logo from "./photos/logo2.png";
 import { Image, Button } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import bg from "./photos/video.mp4";
 const App = () => {
   useEffect(() => {
     setTimeout(() => setLoading(false), 4000);
@@ -24,6 +25,23 @@ const App = () => {
           backgroundColor: "#16161A",
         }}
       >
+        {/* <video
+          autoPlay
+          muted
+          loop
+          style={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: "50%",
+            left: "50%",
+            objectFit: "cover",
+            transform: "translate(-50%,-50%)",
+            zIndex: "-1",
+          }}
+        >
+          <source src={bg} type="video/mp4" />
+        </video> */}
         <div
           style={{
             width: "50%",

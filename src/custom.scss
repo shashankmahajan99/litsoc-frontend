@@ -1,13 +1,19 @@
 // Override default variables before the import
 //NavBar
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 * {
-  font-family: "IBM Plex Sans", sans-serif !important;
+  font-family: "Raleway", sans-serif !important;
 }
 $theme-colors: (
   "dark": #1b2c30,
 );
 
+p {
+  font-family: "Roboto", sans-serif !important;
+}
 .description {
   white-space: pre-line;
 }
@@ -17,7 +23,7 @@ $theme-colors: (
 }
 $primary: #0a2126;
 $secondary: #c4c2c2;
-$info: #7e59ef;
+$info: #0fa697;
 
 .text-responsive {
   font-size: calc(80% + 1vw + 1hv);
@@ -32,6 +38,43 @@ body.modal-open > :not(.modal) {
   -o-filter: blur(0.5px);
   -ms-filter: blur(0.5px);
   filter: blur(0.5px);
+}
+
+@media screen and (max-width: 768px) {
+  .font-xs-130 {
+    font-size: 130%;
+  }
+  .font-xs-100 {
+    font-size: 100%;
+  }
+  img {
+    max-width: 80%;
+    max-height: 80%;
+    aspect-ratio: 1/1;
+  }
+  .commentPic {
+    max-width: 100%;
+    max-height: 33.33%;
+  }
+  .onlineIcon {
+    max-width: 5.996px;
+    max-height: 5.996px;
+  }
+  .myLogo {
+    max-width: 50%;
+    max-height: 50%;
+    aspect-ratio: 1/1;
+  }
+  .profilePic {
+    max-width: 50%;
+    max-height: 50%;
+    aspect-ratio: 1/1;
+  }
+  .postProfilePic {
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+  }
 }
 // Import Bootstrap and its default variables
 @import "../node_modules/bootstrap/scss/bootstrap";

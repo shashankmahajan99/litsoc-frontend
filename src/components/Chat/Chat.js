@@ -7,7 +7,7 @@ import Input from "../Input/Input";
 import axios from "../../axios";
 import SwipeDrawer from "../../SwipeDrawer";
 import UserContext from "../../context/UserContext";
-
+import bg from "../../photos/video.mp4";
 import "./Chat.css";
 
 const ENDPOINT = "https://chat-litsoc.herokuapp.com/";
@@ -68,8 +68,25 @@ const Chat = ({ location }) => {
 
   return (
     <div className="outerContainer">
+      {/* <video
+        autoPlay
+        muted
+        loop
+        style={{
+          position: "fixed",
+          width: "100%",
+          height: "100%",
+          top: "50%",
+          left: "50%",
+          objectFit: "cover",
+          transform: "translate(-50%,-50%)",
+          zIndex: "-1",
+        }}
+      >
+        <source src={bg} type="video/mp4" />
+      </video> */}
       <SwipeDrawer isFalse={1} />
-      <div className="innerContainer">
+      <div className="innerContainer py-5">
         <InfoBar room={room} otherUser={otherUser} />
         <Messages messages={messages} name={name} room={room} />
         <Input

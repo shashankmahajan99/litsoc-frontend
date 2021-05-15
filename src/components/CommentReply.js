@@ -34,8 +34,9 @@ const CommentReply = ({ parentId }) => {
                   <Image
                     src={checkImage(reply.userImage, reply.username)}
                     roundedCircle
-                    fluid
-                    style={{ aspectRatio: "16/10" }}
+                    width="90"
+                    height="90"
+                    className="commentPic"
                   />
                   <p className="text-muted text-center small">
                     {moment(reply.time).format("lll")}

@@ -39,8 +39,9 @@ const Comments = ({ postId }) => {
                   <Image
                     src={checkImage(comment.userImage, comment.username)}
                     roundedCircle
-                    fluid
-                    style={{ aspectRatio: "16/10" }}
+                    width="90"
+                    height="90"
+                    className="commentPic"
                   />
                   <p className="text-muted text-center small">
                     {moment(comment.time).format("lll")}

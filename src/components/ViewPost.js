@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
-import photo from "../photos/livespace.jpg";
 import Image from "react-bootstrap/Image";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/Button";
-import ReactAudioPlayer from "react-audio-player";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCommentAlt,
-  faThumbsUp,
-  faThumbsDown,
-} from "@fortawesome/free-solid-svg-icons";
-import { NavLink } from "react-router-dom";
+import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import SwipeDrawer from "../SwipeDrawer";
-import bg from "../photos/Endless-Constellation2.svg";
+// import bg from "../photos/Endless-Constellation2.svg";
+import bg from "../photos/video.mp4";
+
 import Comments from "./Comment";
 import axios from "../axios";
 import moment from "moment";
@@ -26,13 +22,28 @@ const ViewPost = ({ match }) => {
   const [postLiked, setPostLiked] = useState(false);
   const [userDisliked, setUserDisliked] = useState(false);
   const [postDisliked, setPostDisliked] = useState(false);
-
+  const [relatedPost, setRelatedPost] = useState(undefined);
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const res = await axios.get(
           `https://app-litsoc.herokuapp.com/post/${match.params.id}`
         );
+        if (res.data.similarPosts.length > 0) {
+          let relPost =
+            res.data.similarPosts[
+              Math.floor(
+                Math.random() * (res.data.similarPosts.length - 0 + 1)
+              ) + 0
+            ];
+          axios
+            .get(
+              `https://app-litsoc.herokuapp.com/post/${
+                relPost ? relPost.Post_Id : undefined
+              }`
+            )
+            .then((data) => setRelatedPost(data.data));
+        }
         setPost(res.data);
         userData.user
           ? axios.patch(
@@ -54,47 +65,72 @@ const ViewPost = ({ match }) => {
     };
     fetchPost();
   }, [match.params.id, userData.user]);
-
+  const checkImage = (userImage, username) => {
+    if (userImage === "true") {
+      return `https://firebasestorage.googleapis.com/v0/b/litsoc-a8678.appspot.com/o/${username}?alt=media`;
+    }
+    return "https://app-litsoc.herokuapp.com/image/guest";
+  };
   if (post) {
     return (
       <div
         style={{
-          backgroundAttachment: "fixed",
-          backgroundImage: `url(${bg})`,
+          // backgroundAttachment: "fixed",
+          // backgroundImage: `url(${bg})`,
+          backgroundColor: "#16161A",
         }}
       >
+        {/* <video
+          autoPlay
+          muted
+          loop
+          style={{
+            position: "fixed",
+            width: "100%",
+            height: "100%",
+            top: "50%",
+            left: "50%",
+            objectFit: "cover",
+            transform: "translate(-50%,-50%)",
+            zIndex: "-1",
+          }}
+        >
+          <source src={bg} type="video/mp4" />
+        </video> */}
         <SwipeDrawer isFalse={1} />
-        <div className="container bg-primary text-light rounded">
+        <div className="container mt-4 bg-primary text-light rounded">
           <div className="row">
             {/* <!-- Post Content Column --> */}
             <div className="col-lg-8">
               {/* <!-- Title --> */}
-              <h1 className="mt-4 font-weight-bold">{post.title}</h1>
+              <h1 className="mt-4 font-weight-bold font-xs-130">
+                {post.title}
+              </h1>
               {/* <!-- Author --> */}
-              <h5 className="text-light text-muted text-decoration-none">
+              <h5 className="text-info text-decoration-none font-xs-100">
                 {post.category[0]}
-                {post.category[1] ? "| " + post.category[1] : ""}
+                {post.category[1] ? " | " + post.category[1] : ""}
               </h5>
               <hr className="bg-light" />
               <div className="container">
                 <div className="row">
-                  <div className="col-6">
+                  <div className="col-6 pl-0">
                     <a
                       href={`/secondUser/${post.userid}`}
-                      className="text-decoration-none text-light"
+                      className="text-decoration-none text-light font-xs-100"
                     >
                       <h5>{post.name}</h5>
                     </a>
                   </div>
                   {/* <!-- Date/Time --> */}
-                  <div className="col-6 text-right">
+                  <div className="col-6 text-right font-xs-100 pr-0">
                     <p>Posted on {moment(post.time).format("LLL")}</p>
                   </div>
                 </div>
                 {/* <!-- Post Content --> */}
               </div>
               <hr className="bg-light" />
-              <div className="font-weight-normal font-small text-secondary">
+              <div className="font-weight-normal font-xs-100 text-secondary">
                 <p>Post Description - "{post.description}"</p>
               </div>
               <hr className="bg-light" />
@@ -225,78 +261,79 @@ const ViewPost = ({ match }) => {
                 </div>
               </div>
               {/* <!-- Side Widget --> */}
-              <div className="card my-4 bg-dark">
-                <h5 className="card-header border-secondary text-light">
-                  Related Post
-                </h5>
-                <div className="card-body">
-                  <NavLink to="/viewpost" className="text-decoration-none">
-                    <h4 className="font-weight-bold card-headline">
-                      Cosmos - Carl Sagan
-                    </h4>
-                  </NavLink>
-                  <h6 className="text-muted card-paragraph">
-                    Review | Analysis
-                  </h6>
-                  <div className="font-weight-normal font-small text-secondary">
-                    <p>
-                      Post Description - "Cosmos is a 1980 popular science book
-                      by astronomer and Pulitzer Prize-winning author Carl
-                      Sagan. Its 13 illustrated chapters, corresponding to the
-                      13 episodes of the Cosmos TV series, which the book was
-                      co-developed with and intended to complement, explore the
-                      mutual development of science and civilization. One of
-                      Sagan's main purposes for the book and television series
-                      was to explain complex scientific ideas to anyone
-                      interested in learning. "
-                    </p>
-                  </div>
-                  <h6>
-                    <Badge pill className="mx-2 mt-1" variant="info">
-                      Non Fiction
-                    </Badge>
-                    <Badge pill className="mx-2 mt-1" variant="info">
-                      Science
-                    </Badge>
-                    <Badge pill className="mx-2 mt-1" variant="info">
-                      Space
-                    </Badge>
-                    <Badge pill className="mx-2 mt-1" variant="info">
-                      Physics
-                    </Badge>
-                    <Badge pill className="mx-2 mt-1" variant="info">
-                      Astronomy
-                    </Badge>
-                  </h6>
-                  <div className="row">
-                    <div className="col-5">
-                      <Image
-                        src={photo}
-                        roundedCircle
-                        height="110"
-                        width="120"
-                      />
+              {relatedPost ? (
+                <div className="card my-4 bg-dark">
+                  <h5 className="card-header border-secondary text-light">
+                    Related Post
+                  </h5>
+                  <div className="card-body">
+                    <Link
+                      to={`/viewpost/${relatedPost._id}`}
+                      className="text-decoration-none"
+                    >
+                      <h4 className="font-weight-bold card-headline font-xs-130">
+                        {relatedPost.title}
+                      </h4>
+                    </Link>
+                    <h6 className="text-muted card-paragraph font-xs-100">
+                      {relatedPost.category && relatedPost.category[0]}{" "}
+                      {relatedPost.category && relatedPost.category[1]
+                        ? "| " + relatedPost.category[1]
+                        : ""}
+                    </h6>
+                    <div className="font-weight-normal text-secondary font-xs-100">
+                      <p>
+                        Description -{" "}
+                        {relatedPost.description
+                          ? relatedPost.description.slice(0, 400)
+                          : null}
+                        ...
+                        <strong>
+                          <Link
+                            to={`/viewpost/${relatedPost._id}`}
+                            className="text-light"
+                          >
+                            Read More
+                          </Link>
+                        </strong>
+                      </p>
                     </div>
-                    <div className="col-7 my-auto">
-                      <NavLink
-                        to="/secondUser"
-                        className="text-decoration-none"
-                      >
-                        <h5 className="font-weight-bold text-light">
-                          Jenny Scott
-                        </h5>
-                      </NavLink>
+                    <h6>
+                      {relatedPost.genres &&
+                        relatedPost.genres.map((genre) => (
+                          <Badge pill className="mx-2 mt-1 p-1" variant="info">
+                            {genre}
+                          </Badge>
+                        ))}
+                    </h6>
+                    <div className="row">
+                      <div className="col-5">
+                        <Image
+                          src={checkImage(
+                            relatedPost.userImage,
+                            relatedPost.username
+                          )}
+                          roundedCircle
+                          height="120"
+                          className="mr-md-3 my-2 postProfilePic"
+                          width="120"
+                        />
+                      </div>
+                      <div className="col-7 my-auto">
+                        <Link
+                          to={`/secondUser/${relatedPost.userid}`}
+                          className="text-decoration-none"
+                        >
+                          <h5 className="font-weight-bold text-light">
+                            {relatedPost.name}
+                          </h5>
+                        </Link>
+                      </div>
                     </div>
+                    <br />
                   </div>
-                  <br />
-                  <a
-                    href="/"
-                    className="ml-2 mr-5 text-light text-decoration-none"
-                  >
-                    <FontAwesomeIcon icon={faCommentAlt} /> 45 Comments
-                  </a>
                 </div>
-              </div>
+              ) : null}
             </div>
           </div>
           {/* <!-- /.row --> */}

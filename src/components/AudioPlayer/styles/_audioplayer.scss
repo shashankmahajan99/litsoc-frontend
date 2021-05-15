@@ -1,5 +1,5 @@
 .player {
-    min-height: 20vh;
+    min-height: 15vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -28,10 +28,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    color: #48465e;
-    width: 80%;
+    color: lighten(#48465e, 5%);
     input {
-        width: 100%;
         -webkit-appearance: none;
         background: transparent;
         cursor: pointer;
@@ -64,7 +62,7 @@
     justify-content: center;
     width: 20rem;
     align-items: center;
-    color: #48465e;
+    color: lighten(#48465e, 5%);
 }
 .volumeSlider {
     width: 40%;
@@ -86,16 +84,15 @@ input[type="range"]::-moz-range-thumb {
     width: 16px;
 }
 
-.play {
-    margin: 0 3rem;
-}
-
 @media screen and (max-width: 768px) {
     .time-control {
         width: 90%;
     }
+    .player {
+        min-height: 10vh;
+    }
     .play-control {
-        width: 80%;
+        padding: 0;
     }
     .volume-container {
         width: 10rem;

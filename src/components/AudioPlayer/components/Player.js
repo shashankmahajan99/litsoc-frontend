@@ -59,42 +59,24 @@ const AudioPlayer = ({
   return (
     <div className="player">
       <div className="time-control">
-        <p>{getTime(songInfo.currTime)}</p>
-        <div
-          style={{
-            background: "linear-gradient(to right,#D64FF8,#7e59ef)",
-          }}
-          className="track"
-        >
-          <input
-            min={0}
-            max={songInfo.duration || 0}
-            value={songInfo.currTime}
-            onChange={dragHandler}
-            type="range"
-          />
-          <div style={trackAnimation} className="animate-track"></div>
-        </div>
-        <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
-      </div>
-      <div className="play-control">
-        {!isPlaying && (
-          <FontAwesomeIcon
-            onClick={playSongHandler}
-            icon={faPlay}
-            size="2x"
-            className="play"
-          />
-        )}
-        {isPlaying && (
-          <FontAwesomeIcon
-            onClick={playSongHandler}
-            icon={faPause}
-            size="2x"
-            className="play"
-          />
-        )}
-        <div className="volume-container">
+        <div className="play-control">
+          {!isPlaying && (
+            <FontAwesomeIcon
+              onClick={playSongHandler}
+              icon={faPlay}
+              size="2x"
+              className="play"
+            />
+          )}
+          {isPlaying && (
+            <FontAwesomeIcon
+              onClick={playSongHandler}
+              icon={faPause}
+              size="2x"
+              className="play"
+            />
+          )}
+          {/* <div className="volume-container">
           <FontAwesomeIcon
             icon={faVolumeMute}
             size="2x"
@@ -123,7 +105,27 @@ const AudioPlayer = ({
             className="volumeUp"
             onClick={maxVolHandler}
           />
+        </div> */}
         </div>
+        <p className="mb-0">{getTime(songInfo.currTime)}</p>
+        <div
+          style={{
+            background: "linear-gradient(to right,#0FA697,#042026)",
+          }}
+          className="track"
+        >
+          <input
+            min={0}
+            max={songInfo.duration || 0}
+            value={songInfo.currTime}
+            onChange={dragHandler}
+            type="range"
+          />
+          <div style={trackAnimation} className="animate-track"></div>
+        </div>
+        <p className="mb-0">
+          {songInfo.duration ? getTime(songInfo.duration) : "0:00"}
+        </p>
       </div>
     </div>
   );

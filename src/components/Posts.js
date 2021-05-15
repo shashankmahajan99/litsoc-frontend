@@ -16,10 +16,13 @@ const Posts = (props) => {
   const fetchData = async () => {
     setSearchResults(true);
     let url;
-    let req = await axios.post("https://app-litsoc.herokuapp.com/post/all", {
-      page: page,
-      size: postsNo,
-    });
+    let req = await axios.post(
+      "https://app-litsoc.herokuapp.com/post/simplerecommender?category=All",
+      {
+        page: page,
+        size: postsNo,
+      }
+    );
     setPage(0);
     if (props.myProfile && userData.user) {
       setPage(0);
@@ -32,6 +35,20 @@ const Posts = (props) => {
       setPage(0);
       url = `https://app-litsoc.herokuapp.com/post/all/${props.secondUserId.id}`;
       req = await axios.post(url, { page: page, size: postsNo });
+      if (
+        props.secondUserId.id &&
+        (req.data.msg === "No Results" || req.data.posts.length < 1)
+      ) {
+        setSearchResults(false);
+      }
+    } else if (!props.searchKeyword && props.category && !props.genre) {
+      setPage(0);
+      req = await axios.post(
+        `https://app-litsoc.herokuapp.com/post/simplerecommender?category=${
+          props.category ? props.category : "All"
+        }`,
+        { page: page, size: postsNo }
+      );
       if (req.data.msg === "No Results" || req.data.posts.length < 1) {
         setSearchResults(false);
       }
@@ -65,6 +82,23 @@ const Posts = (props) => {
       if (!req.data.hasNext && req.data.posts.length < 1) {
         setSearchResults(false);
       }
+    } else if (props.feed) {
+      setPage(0);
+      req = await axios.post(
+        "https://app-litsoc.herokuapp.com/post/collaborativerecommender",
+        {
+          page: page,
+          size: postsNo,
+        },
+        {
+          headers: {
+            "x-auth-token": userData.token,
+          },
+        }
+      );
+      if (!req.data.hasNext && req.data.posts.length < 1) {
+        setSearchResults(false);
+      }
     }
     setHasMorePosts(req.data.hasNext);
     setPosts(req.data.posts);
@@ -72,6 +106,7 @@ const Posts = (props) => {
   useEffect(() => {
     fetchData();
   }, [
+    props.feed,
     props.subscription,
     props.myProfile,
     props.secondUserId,
@@ -85,16 +120,26 @@ const Posts = (props) => {
     const tempPage = page + 1;
     setPage((prevPage) => prevPage + 1);
     let url;
-    let res = await axios.post("https://app-litsoc.herokuapp.com/post/all", {
-      page: tempPage,
-      size: postsNo,
-    });
+    let res = await axios.post(
+      "https://app-litsoc.herokuapp.com/post/simplerecommender?category=All",
+      {
+        page: tempPage,
+        size: postsNo,
+      }
+    );
     if (props.myProfile && userData.user) {
       url = `https://app-litsoc.herokuapp.com/post/all/${userData.user.id}`;
       res = await axios.post(url, { page: tempPage, size: postsNo });
     } else if (props.secondUserProfile) {
       url = `https://app-litsoc.herokuapp.com/post/all/${props.secondUserId.id}`;
       res = await axios.post(url, { page: tempPage, size: postsNo });
+    } else if (!props.searchKeyword && props.category && !props.genre) {
+      res = await axios.post(
+        `https://app-litsoc.herokuapp.com/post/simplerecommender?category=${
+          props.category ? props.category : "All"
+        }`,
+        { page: tempPage, size: postsNo }
+      );
     } else if (props.searchKeyword || props.category || props.genre) {
       res = await axios.post(
         `https://app-litsoc.herokuapp.com/post/all/search?keyword=${
@@ -117,6 +162,19 @@ const Posts = (props) => {
           },
         }
       );
+    } else if (props.feed) {
+      res = await axios.post(
+        "https://app-litsoc.herokuapp.com/post/collaborativerecommender",
+        {
+          page: tempPage,
+          size: postsNo,
+        },
+        {
+          headers: {
+            "x-auth-token": userData.token,
+          },
+        }
+      );
     }
     setHasMorePosts(res.data.hasNext);
     setPosts((prevPosts) => {
@@ -129,7 +187,7 @@ const Posts = (props) => {
       dataLength={posts.length} //This is important field to render the next data
       next={fetchMoreData}
       hasMore={hasMorePosts}
-      loader={<h4>Loading...</h4>}
+      loader={"Loading More Posts..."}
     >
       {searchResults ? (
         posts.length > 0 ? (
@@ -137,7 +195,7 @@ const Posts = (props) => {
         ) : (
           <Container
             className="my-3 py-md-2 rounded bg-dark shadow-lg text-light"
-            fluid
+            fluid={1}
           >
             <h4>
               <FontAwesomeIcon icon={faSpinner} spin />
@@ -148,7 +206,7 @@ const Posts = (props) => {
       ) : (
         <Container
           className="my-3 py-md-2 rounded bg-dark shadow-lg text-light"
-          fluid
+          fluid={1}
         >
           <h2>No Results</h2>
         </Container>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Container, Col, Row } from "react-bootstrap";
 import Posts from "./Posts";
 import Image from "react-bootstrap/Image";
@@ -18,6 +18,31 @@ import Settings from "./Settings";
 import UserComments from "./UserComments";
 
 const Profile = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+  const updateDimensions = () => {
+    setWidth(window.innerWidth);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 0,
+      height: width > 768 ? 450 : "auto",
+    },
+    root2: {
+      flexGrow: 1,
+    },
+    tabs: {
+      alignItems: "center",
+      color: "white",
+    },
+    tabs2: {
+      alignItems: "center",
+      color: "white",
+    },
+  }));
   const { userData } = useContext(UserContext);
   const classes = useStyles();
   const [value, setValue] = useState(0);
@@ -31,12 +56,12 @@ const Profile = () => {
     setValue2(newValue);
   };
   return (
-    <Container fluid>
+    <Container fluid={1} className="pt-4 mt-sm-0 pt-sm-0">
       <Row>
         <Col className="bg-dark ml-auto mt-3" sm={2}>
           <div className="w-100 text-center">
             <Image
-              className="my-3"
+              className="my-3 profilePic"
               src={
                 userData.user && userData.user.imgId !== "false"
                   ? `https://firebasestorage.googleapis.com/v0/b/litsoc-a8678.appspot.com/o/${userData.user.username}?alt=media`
@@ -45,7 +70,6 @@ const Profile = () => {
               roundedCircle
               height="160"
               width="160"
-              style={{ aspectRatio: "16/9" }}
             />
             <h4 className="text-secondary">
               {userData.user
@@ -56,40 +80,44 @@ const Profile = () => {
           <Dropdown.Divider />
           <div className={classes.root}>
             <Tabs
-              orientation="vertical"
+              orientation={width > 768 ? "vertical" : "horizontal"}
               variant="scrollable"
+              scrollButtons={width > 768 ? "off" : "on"}
               value={value}
               onChange={handleChange}
-              aria-label="Vertical tabs example"
               className={classes.tabs}
             >
               <Tab
-                className="mt-3 mb-3 bg-primary"
+                className="py-4 py-sm-0 mt-sm-3 mb-sm-3 bg-primary"
                 label="Timeline"
                 {...a11yProps(0)}
               />
               <Tab
-                className="mb-3 bg-primary"
+                className="py-4 py-sm-0 mb-sm-3 bg-primary"
                 label="Create Post"
                 {...a11yProps(1)}
               />
               <Tab
-                className="mb-3 bg-primary"
+                className="py-4 py-sm-0 mb-sm-3 bg-primary"
                 label="Followers"
                 {...a11yProps(2)}
               />
               <Tab
-                className="mb-3 bg-primary"
+                className="py-4 py-sm-0 mb-sm-3 bg-primary"
                 label="Following"
                 {...a11yProps(3)}
               />
-              <Tab className="bg-primary" label="Settings" {...a11yProps(4)} />
+              <Tab
+                className="py-4 mb-sm-3 py-sm-0 bg-primary"
+                label="Settings"
+                {...a11yProps(4)}
+              />
             </Tabs>
           </div>
         </Col>
         <Col className="bg-primary mt-3" sm={10}>
           <TabPanel value={value} index={0}>
-            <Container fluid>
+            <Container fluid={1}>
               <Col>
                 <Row>
                   <div className={classes.root2}>
@@ -152,11 +180,7 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={0}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
@@ -172,23 +196,5 @@ function a11yProps(index) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 0,
-    height: 450,
-  },
-  root2: {
-    flexGrow: 1,
-  },
-  tabs: {
-    alignItems: "center",
-    color: "white",
-  },
-  tabs2: {
-    alignItems: "center",
-    color: "white",
-  },
-}));
 
 export default Profile;

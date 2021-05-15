@@ -15,6 +15,7 @@ import photo from ".././photos/guest.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import firebaseStorage from "../base.js";
+import { Divider } from "@material-ui/core";
 const Settings = () => {
   const { userData } = useContext(UserContext);
   const [firstName, setFirstName] = useState(userData.user.firstName);
@@ -60,7 +61,7 @@ const Settings = () => {
     await axios.patch(
       "https://app-litsoc.herokuapp.com/user/",
       {
-        id: fileRes ? true : false,
+        id: fileRes ? true : userData.user.imgId ? true : false,
         firstName: firstName,
         lastName: lastName,
       },
@@ -142,6 +143,7 @@ const Settings = () => {
               </Card.Body>
             </Accordion.Collapse>
           </Card>
+          <Divider className="bg-light mb-3" />
           <Card className="mt-1 bg-dark text-light">
             <Card.Header className="border-light">
               <Accordion.Toggle
@@ -182,6 +184,7 @@ const Settings = () => {
               </Card.Body>
             </Accordion.Collapse>
           </Card>
+          <Divider className="bg-light mb-3" />
         </Accordion>
         <Button variant="info" onClick={uploadFile} disabled={loading}>
           {loading && <FontAwesomeIcon icon={faSpinner} spin />}
